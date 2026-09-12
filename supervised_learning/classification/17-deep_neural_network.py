@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+
+import numpy as np
+
+
+class DeepNeuralNetwork:
+    """Defines a deep neural network performing binary classification"""
+
+    def __init__(self, nx, layers):
+        """Initialize the deep neural network"""
+
+        if not isinstance(nx, int):
+            raise TypeError("nx must be an integer")
+        if nx < 1:
+            raise ValueError("nx must be a positive integer")
+
+        if not isinstance(layers, list):
+            raise TypeError("layers must be a list of positive integers")
+
+        if len(layers) == 0:
+            raise TypeError("layers must be a list of positive integers")
+
+        for nodes in layers:
+            if not isinstance(nodes, int) or nodes < 1:
+                raise TypeError("layers must be a list of positive integers")
+
+        self.__L = len(layers)
+        self.__cache = {}
+        self.__weights = {}
+
+        for i, nodes in enumerate(layers):
+            if i == 0:
+                previous_nodes = nx
+            else:
+                previous_nodes = layers[i - 1]
+
+            self.__weights["W{}".format(i + 1)] = (
+                np.random.randn(nodes, previous_nodes)
+                * np.sqrt(2 / previous_nodes)
+            )
+
+            self.__weights["b{}".format(i + 1)] = np.zeros((nodes, 1))
+
+    @property
+    def L(self):
+        """Getter for L"""
+        return self.__L
+
+    @property
+    def cache(self):
+        """Getter for cache"""
+        return self.__cache
+
+    @property
+    def weights(self):
+        """Getter for weights"""
+        return self.__weights
